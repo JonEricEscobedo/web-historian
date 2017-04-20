@@ -28,7 +28,6 @@ exports.initialize = function(pathsObj) {
 exports.readListOfUrls = function(callback) {
   fs.readFile(this.paths.list, 'utf-8', function(err, text) {
     if (err) {
-      console.log(err);
       throw err;
     }
     var urlList = text.split('\n');
@@ -39,7 +38,6 @@ exports.readListOfUrls = function(callback) {
 exports.isUrlInList = function(url, callback) {
   fs.readFile(this.paths.list, 'utf-8', function(err, text) {
     if (err) {
-      console.log(err);
       throw err;
     }
     var urlList = text.split('\n');

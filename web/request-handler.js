@@ -4,27 +4,36 @@ var httpHelper = require('./http-helpers');
 var fs = require('fs');
 // require more modules/folders here!
 
-var post = [ {url: "www.example.com"}];
+var post = [ {url: 'www.example.com\n'}];
 
 exports.handleRequest = function (req, res) {
 
   if ( req.method === 'POST') {
-    var body = '';
-    req.on('data', function (data) {
-        console.log('data', data);
-        body += data;
-    });
-    req.on('end', function () {
-        post.push(JSON.parse(body));
-    });
-    console.log("post", post);
-    console.log('url', post[0].url);
-    fs.writeFile(archive.paths.list, post[0].url, 'utf-8', function(err) {
-      if ( err ) {
-        throw err;
-      }
-      res.writeHeader(302, httpHelper.headers);
-      res.end();
+    // var body = '';
+    // req.on('data', function (data) {
+    //     console.log('data', data);
+    //     body += data;
+    // });
+    // req.on('end', function () {
+    //     post.push(JSON.parse(body));
+    // });
+    // console.log("post", post);
+    // console.log('url', post[0].url);
+    // fs.writeFile(archive.paths.list, post[0].url, 'utf-8', function(err) {
+    //   if ( err ) {
+    //     throw err;
+    //   }
+    //   res.writeHeader(302, httpHelper.headers);
+    //   res.end();
+    // });
+    console.log(post[0].url);
+    archive.addUrlToList(post[0].url, function() {
+      archive.isUrlInList(post[0].url, function(exists) {
+        if (exists) {
+          res.writeHeader(302, httpHelper.headers);
+          res.end();
+        }
+      })
     });
   } else if ( req.method == 'GET' ) {
     if ( req.url === '/') {
