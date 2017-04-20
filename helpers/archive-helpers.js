@@ -66,15 +66,10 @@ exports.isUrlArchived = function(url, callback) {
 
 exports.downloadUrls = function(urls) {
   for ( var i = 0; i < urls.length; i ++ ) {
-    var url = urls[i];
-    this.isUrlArchived (urls[i] , (value) => {
-      if ( !value ) {
-        fs.open(this.paths.archivedSites + '/' + url, 'w', function ( err ) {
-          if ( err ) {
-            throw err;
-          }
-        });
-      } 
+    fs.writeFile(this.paths.archivedSites + '/' + urls[i], '', function ( err ) {
+      if ( err ) {
+        throw err;
+      }
     }); 
   }
 };
