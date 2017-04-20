@@ -31,18 +31,46 @@ exports.readListOfUrls = function(callback) {
       console.log(err);
       throw err;
     }
-    var testing = text.split('\n');
-    callback(testing);
+    var urlList = text.split('\n');
+    callback(urlList);
   }); 
 };
 
 exports.isUrlInList = function(url, callback) {
+  fs.readFile(this.paths.list, 'utf-8', function(err, text) {
+    if (err) {
+      console.log(err);
+      throw err;
+    }
+    var urlList = text.split('\n');
+    callback(urlList.includes(url));
+  });
 };
 
 exports.addUrlToList = function(url, callback) {
+  fs.writeFile(this.paths.list, url, 'utf-8', function(err) {
+    if (err) {
+      throw err;
+    }
+    callback(url);
+  });
 };
 
 exports.isUrlArchived = function(url, callback) {
+  var filePath = path.join(this.paths.archivedSites, url);
+  callback ( fs.existsSync(filePath));
+  // console.log(filePath);
+  // if ( fs.existsSync(filePath) ) {
+  //   callback();
+  // } 
+  // fs.readFile(this.paths.archivedSites, 'utf-8', function(err, text) {
+  //   if (err) {
+  //     console.log(err);
+  //     throw err;
+  //   }
+  //   var urlList = text.split('\n');
+  //   callback(urlList.includes(url));
+  // });
 };
 
 exports.downloadUrls = function(urls) {
