@@ -3,7 +3,7 @@ var archive = require('../helpers/archive-helpers');
 var httpHelper = require('./http-helpers');
 var fs = require('fs');
 // require more modules/folders here!
-
+var body = [];
 var post = [ {url: 'www.example.com'}];
     // req.on('data', function (data) {
     //     console.log('data', data);
@@ -52,6 +52,21 @@ exports.handleRequest = function (req, res) {
       // console.log(html);
       res.writeHead(200, httpHelper.headers);
       res.end(html);
+    });
+  } else if (req.method === 'POST') {
+    req.on('data', function(data) {
+      var num = data.indexOf('=');
+      archive.isUrlInList(data.slice(num+1), function(bool) {
+        if (bool) {
+          fs.readFile(archive.paths.archivedSites + data.slice(num+1));
+          res.writeHeader(302, httpHelper.headers);
+          res.end();
+        }
+      });
+
+      fs.writeFile(archive.paths.list, data.slice(num+1) + '\n');
+      res.writeHeader(302, httpHelper.headers);
+      res.end();
     });
   }
   // res.end(archive.paths.siteAssets + '/index.html');
