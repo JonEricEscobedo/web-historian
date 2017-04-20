@@ -57,21 +57,26 @@ exports.addUrlToList = function(url, callback) {
 };
 
 exports.isUrlArchived = function(url, callback) {
-  var filePath = path.join(this.paths.archivedSites, url);
-  callback ( fs.existsSync(filePath));
-  // console.log(filePath);
-  // if ( fs.existsSync(filePath) ) {
-  //   callback();
-  // } 
-  // fs.readFile(this.paths.archivedSites, 'utf-8', function(err, text) {
-  //   if (err) {
-  //     console.log(err);
-  //     throw err;
-  //   }
-  //   var urlList = text.split('\n');
-  //   callback(urlList.includes(url));
-  // });
+  fs.stat(this.paths.archivedSites + '/' + url, function(err) {
+    if ( err ) {
+      callback(false);
+    } else {
+      callback(true);
+    }
+  });
 };
 
 exports.downloadUrls = function(urls) {
+  for ( var i = 0; i < urls.length; i ++ ) {
+    var url = urls[i];
+    this.isUrlArchived (urls[i] , (value) => {
+      if ( !value ) {
+        fs.open(this.paths.archivedSites + '/' + url, 'w', function ( err ) {
+          if ( err ) {
+            throw err;
+          }
+        });
+      } 
+    }); 
+  }
 };
